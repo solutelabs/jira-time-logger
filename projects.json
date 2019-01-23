@@ -1,7 +1,7 @@
 {
   "ABC": {
     "name": "my-project",
-    "comment":"The key here is the issue prefix used in the project. For eg. ABC-3943, YADA-3922, Extend this json as per your project requirements.Only the url is required"
+    "comment":"The key here is the issue prefix used in the project. For eg. ABC-3943, YADA-3922, Extend this json as per your project requirements.Only the url is required",
     "url": "https://my-project.atlassian.net"
   },
   "YADA":{
