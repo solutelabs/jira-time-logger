@@ -22,7 +22,12 @@ const main = async () => {
   try {
     const axiosInstance = await getAxiosInstance();
     if (axiosInstance) {
-      const { ISSUE_KEY, TIME_SPENT, COMMENT } = await getWorkLogPromptFields();
+      const {
+        ISSUE_KEY,
+        TIME_SPENT,
+        COMMENT,
+        STARTED
+      } = await getWorkLogPromptFields();
       let baseurl = projects[ISSUE_KEY.split("-")[0]]["url"];
       const url = `${baseurl}/rest/api/2/`;
       axiosInstance.defaults.baseURL = url;
@@ -30,7 +35,7 @@ const main = async () => {
       spinner.start();
 
       const response = await axiosInstance.post(`/issue/${ISSUE_KEY}/worklog`, {
-        started: getJIRADateFormat(),
+        started: getJIRADateFormat(STARTED),
         timeSpent: TIME_SPENT,
         comment: COMMENT || `Working on issue ${ISSUE_KEY}`
       });
