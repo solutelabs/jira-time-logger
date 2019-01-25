@@ -7,6 +7,7 @@ const moment = require("moment");
 const fs = require("fs");
 const ora = require("ora");
 const spinner = ora("Requesting JIRA");
+const INPUT_DATE_FORMAT = "DD/MM/YY";
 const PROJECTS_PATH = path.resolve(__dirname, "../projects.json");
 let projects = JSON.parse(fs.readFileSync(PROJECTS_PATH));
 
@@ -41,8 +42,14 @@ const getAxiosInstance = async () => {
   }
 };
 
-const getJIRADateFormat = (momentDate = moment()) => {
-  return momentDate.format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
+const getJIRADateFormat = momentDate => {
+  let parsedDate;
+  if (momentDate) {
+    parsedDate = moment(momentDate, INPUT_DATE_FORMAT);
+  } else {
+    parsedDate = moment();
+  }
+  return parsedDate.format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
 };
 const requiredValidator = (value, message) => {
   if (value) {
@@ -80,6 +87,18 @@ const getWorkLogPromptFields = () => {
         type: "text",
         name: "COMMENT",
         message: `Enter description (optional)`
+      },
+      {
+        type: "text",
+        name: "STARTED",
+        validate: value => {
+          if (!value || moment(value, INPUT_DATE_FORMAT).isValid()) {
+            return true;
+          } else {
+            return "Enter valid date e.g. " + INPUT_DATE_FORMAT;
+          }
+        },
+        message: `Enter start date e.g. ${INPUT_DATE_FORMAT} (optional)`
       }
     ],
     {
